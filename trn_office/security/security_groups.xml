@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="category_trn_office" model="ir.module.category">
+        <field name="name">trn Office</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="privilege_office_manager" model="res.groups.privilege">
+        <field name="name">Office Manager</field>
+        <field name="category_id" ref="category_trn_office"/>
+    </record>
+
+    <!-- Manager: maintain the office list. Read access for ordinary staff
+         comes from the base.group_user ACL row, so offices resolve in
+         Many2one pickers without granting anyone edit rights. -->
+    <record id="group_office_manager" model="res.groups">
+        <field name="name">Office: Manager</field>
+        <field name="comment">Create, edit and delete offices.</field>
+        <field name="privilege_id" ref="privilege_office_manager"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+</odoo>

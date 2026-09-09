@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_trn_office_system,trn.office / System,model_trn_office,base.group_system,1,1,1,1
+access_trn_office_user,trn.office / User,model_trn_office,base.group_user,1,0,0,0
+access_trn_office_manager,trn.office / Manager,model_trn_office,group_office_manager,1,1,1,1

@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_trn_service_request_system,trn.service.request / System,model_trn_service_request,base.group_system,1,1,1,1
+access_trn_service_catalog_system,trn.service.catalog / System,model_trn_service_catalog,base.group_system,1,1,1,1
+access_trn_service_team_system,trn.service.team / System,model_trn_service_team,base.group_system,1,1,1,1
+access_trn_service_request_rating_wizard_system,trn.service.request.rating.wizard / System,model_trn_service_request_rating_wizard,base.group_system,1,1,1,1
+access_trn_service_request_user,trn.service.request / Requester,model_trn_service_request,group_service_request_user,1,1,1,0
+access_trn_service_request_supervisor,trn.service.request / Office Head,model_trn_service_request,group_service_request_supervisor,1,0,1,0
+access_trn_service_request_officer,trn.service.request / Officer,model_trn_service_request,group_service_request_officer,1,1,1,0
+access_trn_service_request_manager,trn.service.request / Manager,model_trn_service_request,group_service_request_manager,1,1,1,1
+access_trn_service_catalog_user,trn.service.catalog / Requester,model_trn_service_catalog,group_service_request_user,1,0,0,0
+access_trn_service_catalog_manager,trn.service.catalog / Manager,model_trn_service_catalog,group_service_request_manager,1,1,1,1
+access_trn_service_team_user,trn.service.team / Requester,model_trn_service_team,group_service_request_user,1,0,0,0
+access_trn_service_team_manager,trn.service.team / Manager,model_trn_service_team,group_service_request_manager,1,1,1,1
+access_trn_service_request_rating_wizard,trn.service.request.rating.wizard / Requester,model_trn_service_request_rating_wizard,group_service_request_user,1,1,1,1

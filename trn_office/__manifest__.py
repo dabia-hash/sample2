@@ -1,0 +1,25 @@
+{
+    "name": "trn Office",
+    "version": "19.0.1.0.0",
+    "category": "trn/Core",
+    "summary": "Offices that raise and own operational records",
+    "author": "Your Organization",
+    "website": "",
+    "license": "LGPL-3",
+    "development_status": "Alpha",
+    "maintainers": [],
+    "depends": ["base"],
+    "data": [
+        "security/security_groups.xml",
+        "security/ir.model.access.csv",
+        "views/office_views.xml",
+        "views/res_users_views.xml",
+        "views/menus.xml",
+    ],
+    "demo": [
+        "demo/office_demo.xml",
+    ],
+    "auto_install": False,
+    "application": False,
+    "installable": True,
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_trn_service_catalog_form" model="ir.ui.view">
+        <field name="name">trn.service.catalog.form</field>
+        <field name="model">trn.service.catalog</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Account Reset"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identification">
+                            <field name="code" placeholder="e.g. ACCOUNT_RESET"/>
+                            <field name="category_id"/>
+                            <field name="sequence"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Defaults for new requests">
+                            <field name="default_team_id"/>
+                            <field name="default_priority" widget="priority"/>
+                            <field name="target_resolution_hours"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    <group name="additional_catalog_details" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_trn_service_catalog_list" model="ir.ui.view">
+        <field name="name">trn.service.catalog.list</field>
+        <field name="model">trn.service.catalog</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category_id" optional="show"/>
+                <field name="default_team_id" optional="show"/>
+                <field name="default_priority" widget="priority"/>
+                <field name="target_resolution_hours"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_trn_service_catalog_search" model="ir.ui.view">
+        <field name="name">trn.service.catalog.search</field>
+        <field name="model">trn.service.catalog</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category_id"/>
+                <filter
+                    name="filter_archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+                <group name="group_by">
+                    <filter
+                        name="group_by_category"
+                        string="Category"
+                        context="{'group_by': 'category_id'}"
+                    />
+                    <filter
+                        name="group_by_team"
+                        string="Default Team"
+                        context="{'group_by': 'default_team_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_trn_service_catalog" model="ir.actions.act_window">
+        <field name="name">Service Catalog</field>
+        <field name="res_model">trn.service.catalog</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add a service</p>
+            <p>
+                Each service carries the team that normally handles it, its
+                default priority, and how quickly it should be resolved.
+            </p>
+        </field>
+    </record>
+</odoo>

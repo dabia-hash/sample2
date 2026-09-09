@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Staff the default team first: a request cannot be assigned to someone
+         who is not a member, so this must load before the requests below. -->
+    <record id="team_service_desk" model="trn.service.team">
+        <field name="team_lead_id" ref="base.user_admin"/>
+        <field
+            name="member_ids"
+            eval="[Command.set([ref('base.user_admin'), ref('base.user_demo')])]"
+        />
+    </record>
+
+    <record id="demo_request_network" model="trn.service.request">
+        <field name="title">No network in the North Branch meeting room</field>
+        <field name="description">The wired sockets in the meeting room stopped working this morning. Wi-Fi still works elsewhere in the building.</field>
+        <field name="requester_id" ref="base.user_demo"/>
+        <field name="catalog_id" ref="catalog_network_failure"/>
+    </record>
+
+    <record id="demo_request_account_reset" model="trn.service.request">
+        <field name="title">Locked out after password change</field>
+        <field name="description">Changed my password yesterday and can no longer sign in on the desktop.</field>
+        <field name="requester_id" ref="base.user_demo"/>
+        <field name="catalog_id" ref="catalog_account_reset"/>
+        <field name="assigned_user_id" ref="base.user_admin"/>
+        <field name="state">assigned</field>
+    </record>
+
+    <record id="demo_request_printer" model="trn.service.request">
+        <field name="title">Printer on the second floor jams on every job</field>
+        <field name="description">Paper jams halfway through printing. Happens with every document.</field>
+        <field name="requester_id" ref="base.user_admin"/>
+        <field name="catalog_id" ref="catalog_printer_issue"/>
+        <field name="assigned_user_id" ref="base.user_admin"/>
+        <field name="state">in_progress</field>
+    </record>
+
+    <record id="demo_request_email" model="trn.service.request">
+        <field name="title">Cannot access shared mailbox</field>
+        <field name="description">The shared team mailbox no longer appears in my mail client.</field>
+        <field name="requester_id" ref="base.user_demo"/>
+        <field name="catalog_id" ref="catalog_email_access"/>
+        <field name="assigned_user_id" ref="base.user_admin"/>
+        <field name="resolution">Re-granted delegate permissions on the shared mailbox and refreshed the client profile.</field>
+        <field name="state">resolved</field>
+    </record>
+
+    <record id="demo_request_software" model="trn.service.request">
+        <field name="title">Install the statistics package on my laptop</field>
+        <field name="description">Need the approved statistics package for the quarterly analysis.</field>
+        <field name="requester_id" ref="base.user_demo"/>
+        <field name="catalog_id" ref="catalog_software_installation"/>
+        <field name="assigned_user_id" ref="base.user_admin"/>
+        <field name="resolution">Installed the approved package and confirmed the licence with the requester.</field>
+        <field name="state">closed</field>
+        <field name="rating_value">5</field>
+        <field name="rating_comment">Installed the same day, and walked me through the licence.</field>
+    </record>
+</odoo>

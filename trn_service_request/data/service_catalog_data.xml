@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- A single default team so catalogue entries route somewhere on a fresh
+         install. Deployments add their own teams and re-point the services. -->
+    <record id="team_service_desk" model="trn.service.team">
+        <field name="name">IT Service Desk</field>
+        <field name="code">SERVICE_DESK</field>
+    </record>
+
+    <record id="catalog_account_reset" model="trn.service.catalog">
+        <field name="name">Account Reset</field>
+        <field name="code">ACCOUNT_RESET</field>
+        <field name="category_id" ref="code_category_access"/>
+        <field name="default_team_id" ref="team_service_desk"/>
+        <field name="default_priority">high</field>
+        <field name="target_resolution_hours">4</field>
+        <field name="description">Password resets, locked accounts, and access that has stopped working.</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="catalog_network_failure" model="trn.service.catalog">
+        <field name="name">Network Failure</field>
+        <field name="code">NETWORK_FAILURE</field>
+        <field name="category_id" ref="code_category_network"/>
+        <field name="default_team_id" ref="team_service_desk"/>
+        <field name="default_priority">urgent</field>
+        <field name="target_resolution_hours">2</field>
+        <field name="description">No connectivity, intermittent connection, or slow network affecting work.</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="catalog_hardware_repair" model="trn.service.catalog">
+        <field name="name">Hardware Repair</field>
+        <field name="code">HARDWARE_REPAIR</field>
+        <field name="category_id" ref="code_category_hardware"/>
+        <field name="default_team_id" ref="team_service_desk"/>
+        <field name="default_priority">normal</field>
+        <field name="target_resolution_hours">48</field>
+        <field name="description">Faulty desktops, laptops, monitors, and peripherals.</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="catalog_software_installation" model="trn.service.catalog">
+        <field name="name">Software Installation</field>
+        <field name="code">SOFTWARE_INSTALLATION</field>
+        <field name="category_id" ref="code_category_software"/>
+        <field name="default_team_id" ref="team_service_desk"/>
+        <field name="default_priority">low</field>
+        <field name="target_resolution_hours">72</field>
+        <field name="description">Installing or upgrading approved software.</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="catalog_email_access" model="trn.service.catalog">
+        <field name="name">Email Access</field>
+        <field name="code">EMAIL_ACCESS</field>
+        <field name="category_id" ref="code_category_access"/>
+        <field name="default_team_id" ref="team_service_desk"/>
+        <field name="default_priority">high</field>
+        <field name="target_resolution_hours">4</field>
+        <field name="description">Mailbox access, distribution lists, and mail client problems.</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="catalog_printer_issue" model="trn.service.catalog">
+        <field name="name">Printer Issue</field>
+        <field name="code">PRINTER_ISSUE</field>
+        <field name="category_id" ref="code_category_hardware"/>
+        <field name="default_team_id" ref="team_service_desk"/>
+        <field name="default_priority">normal</field>
+        <field name="target_resolution_hours">24</field>
+        <field name="description">Printers, scanners, and print queues.</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="catalog_other" model="trn.service.catalog">
+        <field name="name">Other IT Request</field>
+        <field name="code">OTHER</field>
+        <field name="category_id" ref="code_category_other"/>
+        <field name="default_team_id" ref="team_service_desk"/>
+        <field name="default_priority">normal</field>
+        <field name="target_resolution_hours">24</field>
+        <field name="description">Anything not covered by the other services. Describe the problem in full.</field>
+        <field name="sequence">90</field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="mail_template_request_resolved" model="mail.template">
+        <field name="name">Service Request: Resolved</field>
+        <field name="model_id" ref="model_trn_service_request"/>
+        <field name="subject">{{ object.name }} has been resolved</field>
+        <field name="email_from">{{ (object.assigned_user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.requester_id.email_formatted }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Hello <t t-out="object.requester_id.name or ''"/>,</p>
+                <p>
+                    Your request <strong t-out="object.name or ''"/> —
+                    <t t-out="object.title or ''"/> — has been resolved.
+                </p>
+                <p><strong>What was done</strong></p>
+                <p t-out="object.resolution or ''"/>
+                <p>
+                    If the problem is not actually fixed, reply to this email and
+                    the request will be picked up again.
+                </p>
+            </div>
+        </field>
+    </record>
+</odoo>

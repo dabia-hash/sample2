@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_service_request_root"
+        name="Service Requests"
+        sequence="85"
+        groups="trn_service_request.group_service_request_user"
+    />
+
+    <menuitem
+        id="menu_service_request_operations"
+        name="Requests"
+        parent="menu_service_request_root"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_service_request_list"
+        name="All Requests"
+        parent="menu_service_request_operations"
+        action="action_trn_service_request"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_service_request_reporting"
+        name="Reporting"
+        parent="menu_service_request_root"
+        sequence="50"
+        groups="trn_service_request.group_service_request_officer"
+    />
+    <menuitem
+        id="menu_service_request_analysis"
+        name="Analysis"
+        parent="menu_service_request_reporting"
+        action="action_trn_service_request_report"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_service_request_configuration"
+        name="Configuration"
+        parent="menu_service_request_root"
+        sequence="90"
+        groups="trn_service_request.group_service_request_manager"
+    />
+    <menuitem
+        id="menu_service_catalog"
+        name="Service Catalog"
+        parent="menu_service_request_configuration"
+        action="action_trn_service_catalog"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_service_team"
+        name="Teams"
+        parent="menu_service_request_configuration"
+        action="action_trn_service_team"
+        sequence="20"
+    />
+</odoo>
