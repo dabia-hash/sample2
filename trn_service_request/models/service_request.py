@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.mail import email_normalize, html2plaintext
 
 from .service_priority import (
     OPEN_STATES,
@@ -273,6 +274,82 @@ class ServiceRequest(models.Model):
             if request.requester_id.partner_id:
                 request.message_subscribe(partner_ids=request.requester_id.partner_id.ids)
         return requests
+
+    # ------------------------------------------------------------------
+    # Email intake
+    # ------------------------------------------------------------------
+
+    @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        """Open a request from an inbound email sent to a team's address.
+
+        Only known internal users may raise a request this way. Mail from
+        anyone else is refused outright rather than parked under a catch-all
+        account, so an outsider cannot fill the queue.
+        """
+        values = dict(custom_values or {})
+        sender = self._find_internal_user_from_email(msg_dict.get("email_from"))
+        if not sender:
+            raise ValueError("Service request email refused: sender does not match an active " "internal user.")
+
+        team = self.env["trn.service.team"].browse(values.get("team_id"))
+        if not team.default_catalog_id:
+            raise ValueError("Service request email refused: the addressed team has no default service.")
+
+        subject = (msg_dict.get("subject") or "").strip()
+        values.update(
+            {
+                "requester_id": sender.id,
+                "title": subject or _("Email request from %(name)s", name=sender.name),
+                "description": html2plaintext(msg_dict.get("body") or ""),
+                "catalog_id": team.default_catalog_id.id,
+                # mail.thread.message_new drops the subject into _rec_name -
+                # here the sequence reference - whenever that key is falsy, so
+                # a blank would be overwritten with the subject line. Passing
+                # the same sentinel the field defaults to keeps numbering in
+                # create(), the single place that draws an SR/ number.
+                "name": _("New"),
+            }
+        )
+        return super().message_new(msg_dict, values)
+
+    def message_update(self, msg_dict, update_vals=None):
+        """Thread a reply onto the request without letting email drive it.
+
+        An inbound email is a comment, not a command: it must never move the
+        workflow or overwrite what IT recorded.
+        """
+        protected = {
+            "state",
+            "priority",
+            "resolution",
+            "assigned_user_id",
+            "team_id",
+            "catalog_id",
+            "rating_value",
+            "rating_comment",
+        }
+        safe_vals = {key: value for key, value in (update_vals or {}).items() if key not in protected}
+        return super().message_update(msg_dict, safe_vals)
+
+    @api.model
+    def _find_internal_user_from_email(self, email_from):
+        """Resolve an email address to an active, non-portal internal user."""
+        normalized = email_normalize(email_from) if email_from else False
+        if not normalized:
+            return self.env["res.users"]
+        user = self.env["res.users"].search(
+            [
+                ("email_normalized", "=", normalized),
+                ("share", "=", False),
+                ("active", "=", True),
+            ],
+            limit=1,
+        )
+        if not user:
+            # Deliberately logs the address only, never the message body.
+            _logger.warning("Service request email from unknown sender %s ignored", normalized)
+        return user
 
     # ------------------------------------------------------------------
     # Lifecycle actions

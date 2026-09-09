@@ -21,6 +21,8 @@ it is resolved.
   email when their request is resolved
 - Satisfaction rating left by the requester after closure, through a wizard that verifies
   the caller before recording the score
+- Email intake: a team may own an address, and mail sent to it opens a request routed to
+  that team
 - Pivot and graph analysis by office, service, category, team and status
 
 ### Key Models
@@ -56,6 +58,27 @@ Read and write are separated in the record rules: `rule_service_request_own_read
 sight of your own and assigned requests, while `rule_service_request_own_write` narrows
 editing to your own requests that are still New. Without that second rule, model-level
 write access would let a requester edit any request whose id they could guess.
+
+### Email Intake
+
+A team may be given an email address (`alias_name` plus `alias_domain_id`, from Odoo's
+`mail.alias.mixin.optional`). Mail sent there opens a request routed to that team, using
+the team's `default_catalog_id` as the service — a team with an address must have one,
+because `catalog_id` is required and a missing default would otherwise fail deep inside the
+mail gateway.
+
+**Only known internal users may raise a request by email.** `_alias_get_error` on
+`trn.service.team` resolves the sender against active, non-portal `res.users` by normalised
+email and bounces anything else, so an outsider cannot fill the queue. The rejection is
+raised as a non-config `AliasError`, which bounces the message without flagging the alias
+itself as broken.
+
+Replies thread onto the existing request as chatter. `message_update` strips `state`,
+`priority`, `resolution`, `assigned_user_id`, `team_id`, `catalog_id` and the rating fields
+from inbound updates: an email is a comment, never a command.
+
+Production use needs a configured `mail.alias.domain` and working inbound (catchall) mail.
+The tests drive the gateway directly, so they pass without either.
 
 ### Priority
 

@@ -22,6 +22,16 @@
                     <group string="Members">
                         <field name="member_ids" nolabel="1" widget="many2many_tags"/>
                     </group>
+                    <group string="Email Intake">
+                        <field name="alias_name" placeholder="e.g. accounts"/>
+                        <field name="alias_domain_id"/>
+                        <field name="alias_email" invisible="not alias_email"/>
+                        <field
+                            name="default_catalog_id"
+                            required="alias_name"
+                            help="Mail arriving at this address becomes a request for this service."
+                        />
+                    </group>
                     <group name="additional_team_details" invisible="1"/>
                 </sheet>
             </form>

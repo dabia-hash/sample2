@@ -313,12 +313,56 @@ derived priority code. Validating the demo file itself would need a `--with-demo
 | Module | Tests |
 | ------ | ----- |
 | `trn_office` | 12 passing |
-| `trn_service_request` | 60 passing |
+| `trn_service_request` | 73 passing (60 core + 13 email intake) |
 
 ---
 
-## 10. Explicitly Out of Scope for V1
+## 10. Email-to-Ticket (added after v1)
 
-Portal and website submission · email-to-ticket via `mail.alias` · SLA escalation and breach
+Approved as a bounded change on 2026-09-09 and implemented in `trn_service_request`.
+
+**Decisions**
+
+| Question | Decision |
+| -------- | -------- |
+| Who may email in? | **Known internal users only.** Unknown senders are bounced, keeping `requester_id` required and the record rules untouched. |
+| How many addresses? | **One per team.** Routing happens at intake, as in Odoo's own helpdesk. |
+| Which service? | The addressed team's **`default_catalog_id`**, required once a team has an address. |
+
+**How it works**
+
+- `trn.service.team` inherits `mail.alias.mixin.optional`, so only teams actually given an
+  address carry an alias record. `_alias_get_creation_values` points the alias at
+  `trn.service.request` and stashes `{'team_id': id}` in `alias_defaults`.
+- `trn.service.request.message_new` builds the request: sender as `requester_id`, subject as
+  `title` (with a fallback so an empty subject cannot lose the request), plain-text body as
+  `description`, and the team's default service as `catalog_id`. `office_id` falls out of the
+  existing compute, so office-head visibility needs no extra code.
+- `message_update` strips workflow fields from inbound mail — an email is a comment, not a
+  command.
+
+**Two corrections found by running the tests**
+
+1. **The sender check belongs on the team, not the request.** The gateway resolves
+   `_alias_get_error` against the alias's *parent* record, which the mixin sets to the team.
+   Returning a non-config `AliasError` there bounces cleanly; raising `ValueError` inside
+   `message_new` instead sent Odoo down its `set_invalid=True` path, which crashed with a
+   `MissingError` rendering its own bounce body.
+2. **The default-service check cannot be an `@api.constrains`.** The alias mixin assigns
+   `alias_id` in a nested write of its own, so a constraint judges a half-applied record and
+   rejects a single write that sets the address and the default service together — exactly
+   what saving the form does. The check runs at the end of `create()`/`write()` instead,
+   skipping the mixin's internal `{'alias_id': ...}` write.
+
+**Tests:** `tests/test_email_intake.py`, 13 tests driving real RFC2822 messages through
+`message_process` — routing, sender identity, subject and body mapping, office derivation,
+archived-user rejection, reply threading, workflow protection, and the alias configuration
+guard.
+
+---
+
+## 11. Explicitly Out of Scope for V1
+
+Portal and website submission · SLA escalation and breach
 notifications · auto-assignment and round-robin routing · per-service custom question forms ·
 knowledge base and canned responses · multi-company · time tracking and billing · REST API.
