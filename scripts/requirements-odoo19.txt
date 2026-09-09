@@ -42,7 +42,7 @@ python-stdnum>=1.17
 pytz
 pyusb>=1.2.1
 qrcode>=7.3.1
-reportlab>=3.6.8
+reportlab>=5.0.1
 requests>=2.25.1
 rjsmin>=1.1.0
 rcssmin
