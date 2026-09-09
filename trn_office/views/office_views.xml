@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_trn_office_form" model="ir.ui.view">
+        <field name="name">trn.office.form</field>
+        <field name="model">trn.office</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Head Office"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" placeholder="e.g. HO"/>
+                            <field name="parent_id"/>
+                        </group>
+                        <group>
+                            <field name="office_head_id"/>
+                            <field name="partner_id"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <group name="additional_office_details" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_trn_office_list" model="ir.ui.view">
+        <field name="name">trn.office.list</field>
+        <field name="model">trn.office</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="parent_id" optional="show"/>
+                <field name="office_head_id" optional="show"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_trn_office_search" model="ir.ui.view">
+        <field name="name">trn.office.search</field>
+        <field name="model">trn.office</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="office_head_id"/>
+                <filter
+                    name="filter_archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+                <group name="group_by">
+                    <filter
+                        name="group_by_parent"
+                        string="Parent Office"
+                        context="{'group_by': 'parent_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_trn_office" model="ir.actions.act_window">
+        <field name="name">Offices</field>
+        <field name="res_model">trn.office</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add the first office</p>
+            <p>
+                Offices identify where a request comes from. Staff are linked to an
+                office on their user record, and office heads can see everything
+                raised by their own office.
+            </p>
+        </field>
+    </record>
+</odoo>

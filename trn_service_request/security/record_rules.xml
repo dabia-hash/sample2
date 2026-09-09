@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Read: a requester sees what they raised, plus anything assigned to
+         them. Rules from different groups are OR'ed, so officers and office
+         heads widen this rather than being narrowed by it. -->
+    <record id="rule_service_request_own_read" model="ir.rule">
+        <field name="name">Service Request: own or assigned (read)</field>
+        <field name="model_id" ref="model_trn_service_request"/>
+        <field name="groups" eval="[Command.link(ref('group_service_request_user'))]"/>
+        <field
+            name="domain_force"
+        >['|', ('requester_id', '=', user.id), ('assigned_user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Write: a requester may correct their own request only while it is
+         still New. Once IT has picked it up, the record belongs to IT.
+         Without this rule, model-level write access would let a requester
+         edit any request whose id they could guess. -->
+    <record id="rule_service_request_own_write" model="ir.rule">
+        <field name="name">Service Request: own and still new (write)</field>
+        <field name="model_id" ref="model_trn_service_request"/>
+        <field name="groups" eval="[Command.link(ref('group_service_request_user'))]"/>
+        <field
+            name="domain_force"
+        >[('requester_id', '=', user.id), ('state', '=', 'new')]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Office heads see their own office's requests, and no other office's. -->
+    <record id="rule_service_request_office_head_read" model="ir.rule">
+        <field name="name">Service Request: own office (read)</field>
+        <field name="model_id" ref="model_trn_service_request"/>
+        <field name="groups" eval="[Command.link(ref('group_service_request_supervisor'))]"/>
+        <field name="domain_force">[('office_id.office_head_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- IT works the whole queue, across every office. -->
+    <record id="rule_service_request_officer_all" model="ir.rule">
+        <field name="name">Service Request: all requests (IT)</field>
+        <field name="model_id" ref="model_trn_service_request"/>
+        <field name="groups" eval="[Command.link(ref('group_service_request_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Priority mirrors the static Selection on trn.service.request. It is a
+         system vocabulary because every code must have a Selection counterpart:
+         adding a code here alone would produce a priority nothing can select. -->
+    <record id="vocab_service_priority" model="trn.vocabulary">
+        <field name="name">Service Request Priority</field>
+        <field name="namespace_uri">urn:trn:vocab:service-priority</field>
+        <field name="description">Urgency levels for service requests. Mirrors the priority Selection on trn.service.request so that reporting and integrations have a stable coded value.</field>
+        <field name="is_system" eval="True"/>
+        <field name="domain">operations</field>
+    </record>
+
+    <record id="code_priority_low" model="trn.vocabulary.code">
+        <field name="vocabulary_id" ref="vocab_service_priority"/>
+        <field name="code">low</field>
+        <field name="display">Low</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="code_priority_normal" model="trn.vocabulary.code">
+        <field name="vocabulary_id" ref="vocab_service_priority"/>
+        <field name="code">normal</field>
+        <field name="display">Normal</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="code_priority_high" model="trn.vocabulary.code">
+        <field name="vocabulary_id" ref="vocab_service_priority"/>
+        <field name="code">high</field>
+        <field name="display">High</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="code_priority_urgent" model="trn.vocabulary.code">
+        <field name="vocabulary_id" ref="vocab_service_priority"/>
+        <field name="code">urgent</field>
+        <field name="display">Urgent</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- Categories group services for reporting. Deliberately not a system
+         vocabulary: deployments are expected to add their own categories. -->
+    <record id="vocab_service_category" model="trn.vocabulary">
+        <field name="name">Service Category</field>
+        <field name="namespace_uri">urn:trn:vocab:service-category</field>
+        <field name="description">Grouping of IT services for reporting, e.g. Access, Network, Hardware.</field>
+        <field name="is_system" eval="False"/>
+        <field name="domain">operations</field>
+    </record>
+
+    <record id="code_category_access" model="trn.vocabulary.code">
+        <field name="vocabulary_id" ref="vocab_service_category"/>
+        <field name="code">access</field>
+        <field name="display">Access &amp; Accounts</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="code_category_network" model="trn.vocabulary.code">
+        <field name="vocabulary_id" ref="vocab_service_category"/>
+        <field name="code">network</field>
+        <field name="display">Network</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="code_category_hardware" model="trn.vocabulary.code">
+        <field name="vocabulary_id" ref="vocab_service_category"/>
+        <field name="code">hardware</field>
+        <field name="display">Hardware</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="code_category_software" model="trn.vocabulary.code">
+        <field name="vocabulary_id" ref="vocab_service_category"/>
+        <field name="code">software</field>
+        <field name="display">Software</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="code_category_other" model="trn.vocabulary.code">
+        <field name="vocabulary_id" ref="vocab_service_category"/>
+        <field name="code">other</field>
+        <field name="display">Other</field>
+        <field name="sequence">90</field>
+    </record>
+</odoo>

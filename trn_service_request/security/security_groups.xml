@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="category_trn_service_request" model="ir.module.category">
+        <field name="name">trn Service Request</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="privilege_service_request_officer" model="res.groups.privilege">
+        <field name="name">Service Requests</field>
+        <field name="category_id" ref="category_trn_service_request"/>
+    </record>
+
+    <!-- Requester: raise requests and follow their own. -->
+    <record id="group_service_request_user" model="res.groups">
+        <field name="name">Service Request: Requester</field>
+        <field name="comment">Raise service requests and track your own.</field>
+        <field name="privilege_id" ref="privilege_service_request_officer"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Office head: oversight of everything raised by their own office. -->
+    <record id="group_service_request_supervisor" model="res.groups">
+        <field name="name">Service Request: Office Head</field>
+        <field name="comment">See every request raised by your own office.
+Implies Requester permissions.</field>
+        <field name="privilege_id" ref="privilege_service_request_officer"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_service_request_user'))]"/>
+    </record>
+
+    <!-- Officer: works the whole queue. -->
+    <record id="group_service_request_officer" model="res.groups">
+        <field name="name">Service Request: IT Officer</field>
+        <field name="comment">See and work every request, from any office.
+Implies Requester permissions.</field>
+        <field name="privilege_id" ref="privilege_service_request_officer"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_service_request_user'))]"/>
+    </record>
+
+    <!-- Manager: configuration and deletion. -->
+    <record id="group_service_request_manager" model="res.groups">
+        <field name="name">Service Request: IT Manager</field>
+        <field name="comment">Configure the service catalogue and teams, and delete requests.
+Implies IT Officer permissions.</field>
+        <field name="privilege_id" ref="privilege_service_request_officer"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_service_request_officer'))]"/>
+    </record>
+</odoo>

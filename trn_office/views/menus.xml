@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_trn_administration_offices"
+        name="Offices"
+        parent="base.menu_administration"
+        groups="base.group_system"
+        sequence="55"
+    />
+    <menuitem
+        id="menu_trn_office_list"
+        name="Offices"
+        parent="menu_trn_administration_offices"
+        action="action_trn_office"
+        sequence="10"
+    />
+</odoo>

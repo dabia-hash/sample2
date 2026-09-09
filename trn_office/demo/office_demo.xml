@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="office_head_quarters" model="trn.office">
+        <field name="name">Head Office</field>
+        <field name="code">HO</field>
+    </record>
+
+    <record id="office_north_branch" model="trn.office">
+        <field name="name">North Branch</field>
+        <field name="code">NB</field>
+        <field name="parent_id" ref="office_head_quarters"/>
+    </record>
+
+    <record id="office_south_branch" model="trn.office">
+        <field name="name">South Branch</field>
+        <field name="code">SB</field>
+        <field name="parent_id" ref="office_head_quarters"/>
+    </record>
+
+    <!-- Give the standard demo user a home office so records they create
+         default to a sensible place. -->
+    <record id="base.user_demo" model="res.users">
+        <field name="office_id" ref="office_head_quarters"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="office_id" ref="office_head_quarters"/>
+    </record>
+</odoo>
