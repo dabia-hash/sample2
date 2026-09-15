@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="course_bsit" model="trn.course">
+        <field name="code">BSIT</field>
+        <field name="name">BS Information Technology</field>
+    </record>
+    <record id="course_bscs" model="trn.course">
+        <field name="code">BSCS</field>
+        <field name="name">BS Computer Science</field>
+    </record>
+    <record id="course_bsba" model="trn.course">
+        <field name="code">BSBA</field>
+        <field name="name">BS Business Administration</field>
+    </record>
+    <record id="course_bsed" model="trn.course">
+        <field name="code">BSED</field>
+        <field name="name">BS Education</field>
+    </record>
+
+    <record id="student_1" model="trn.student" context="{'tracking_disable': True}">
+        <field name="id_number">DEMO-2026-0001</field>
+        <field name="name">Maria Santos</field>
+        <field name="course_id" ref="course_bsit"/>
+        <field name="year_level">2</field>
+        <field name="school_year">2026-2027</field>
+    </record>
+    <record id="student_2" model="trn.student" context="{'tracking_disable': True}">
+        <field name="id_number">DEMO-2026-0002</field>
+        <field name="name">Jose Rivera</field>
+        <field name="course_id" ref="course_bsit"/>
+        <field name="year_level">1</field>
+        <field name="school_year">2026-2027</field>
+    </record>
+    <record id="student_3" model="trn.student" context="{'tracking_disable': True}">
+        <field name="id_number">DEMO-2026-0003</field>
+        <field name="name">Ana Dela Cruz</field>
+        <field name="course_id" ref="course_bscs"/>
+        <field name="year_level">3</field>
+        <field name="school_year">2026-2027</field>
+    </record>
+    <record id="student_4" model="trn.student" context="{'tracking_disable': True}">
+        <field name="id_number">DEMO-2026-0004</field>
+        <field name="name">Paolo Mendoza</field>
+        <field name="course_id" ref="course_bscs"/>
+        <field name="year_level">4</field>
+        <field name="school_year">2026-2027</field>
+    </record>
+    <record id="student_5" model="trn.student" context="{'tracking_disable': True}">
+        <field name="id_number">DEMO-2026-0005</field>
+        <field name="name">Liza Aquino</field>
+        <field name="course_id" ref="course_bsba"/>
+        <field name="year_level">2</field>
+        <field name="school_year">2026-2027</field>
+    </record>
+    <record id="student_6" model="trn.student" context="{'tracking_disable': True}">
+        <field name="id_number">DEMO-2026-0006</field>
+        <field name="name">Ramon Bautista</field>
+        <field name="course_id" ref="course_bsed"/>
+        <field name="year_level">1</field>
+        <field name="school_year">2026-2027</field>
+    </record>
+</odoo>

@@ -16,7 +16,9 @@
         "views/course_views.xml",
         "views/menus.xml",
     ],
-    "demo": [],
+    "demo": [
+        "demo/student_demo.xml",
+    ],
     "auto_install": False,
     "application": True,
     "installable": True,

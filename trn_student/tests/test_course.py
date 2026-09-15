@@ -10,17 +10,17 @@ class TestCourse(StudentCase):
     def test_course_code_must_be_unique(self):
         """Two courses sharing a code make every student ambiguous."""
         with self.assertRaises(ValidationError):
-            self.Course.create({"code": "BSIT", "name": "Duplicate"})
+            self.Course.create({"code": self.course_bsit.code, "name": "Duplicate"})
 
     def test_course_code_is_uppercased(self):
         """'bsit' and 'BSIT' are the same course, so store one spelling."""
-        course = self.Course.create({"code": "  bs cs  ", "name": "BS Computer Science"})
-        self.assertEqual(course.code, "BS CS")
+        course = self.Course.create({"code": "  test bs cs  ", "name": "Test BS Computer Science"})
+        self.assertEqual(course.code, "TEST BS CS")
 
     def test_course_code_differing_only_by_case_is_a_duplicate(self):
         """Normalising on write is pointless if it does not close this hole."""
         with self.assertRaises(ValidationError):
-            self.Course.create({"code": "bsit", "name": "Sneaky Duplicate"})
+            self.Course.create({"code": self.course_bsit.code.lower(), "name": "Sneaky Duplicate"})
 
     def test_blank_course_code_is_rejected(self):
         """required=True accepts '   '; the registrar must not get away with it."""
@@ -29,12 +29,15 @@ class TestCourse(StudentCase):
 
     def test_display_name_shows_code_and_name(self):
         """A dropdown of bare codes is unreadable to anyone new."""
-        self.assertEqual(self.course_bsit.display_name, "BSIT — BS Information Technology")
+        self.assertEqual(
+            self.course_bsit.display_name,
+            f"{self.course_bsit.code} — {self.course_bsit.name}",
+        )
 
     def test_course_is_found_by_code_or_by_name(self):
         """Registrars type whichever they remember."""
-        by_code = [match[0] for match in self.Course.name_search("BSIT")]
-        by_name = [match[0] for match in self.Course.name_search("Information")]
+        by_code = [match[0] for match in self.Course.name_search(self.course_bsit.code)]
+        by_name = [match[0] for match in self.Course.name_search("Test BS Information")]
         self.assertIn(self.course_bsit.id, by_code)
         self.assertIn(self.course_bsit.id, by_name)
 
@@ -61,6 +64,6 @@ class TestCourse(StudentCase):
 
     def test_an_empty_course_can_be_deleted(self):
         """A course added by mistake should not be permanent."""
-        spare = self.Course.create({"code": "SPARE", "name": "Spare Course"})
+        spare = self.Course.create({"code": "TEST-SPARE", "name": "Spare Course"})
         spare.unlink()
         self.assertFalse(spare.exists())

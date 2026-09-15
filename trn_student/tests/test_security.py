@@ -10,7 +10,7 @@ class TestStudentSecurity(StudentCase):
         """Enrolling students is the registrar's whole job."""
         student = self.Student.with_user(self.user_registrar).create(
             {
-                "id_number": "2026-00500",
+                "id_number": "TEST-2026-00500",
                 "name": "Registrar Created",
                 "course_id": self.course_bsit.id,
                 "year_level": "1",
@@ -34,12 +34,12 @@ class TestStudentSecurity(StudentCase):
     def test_registrar_can_read_courses(self):
         """They must pick a course when enrolling someone."""
         course = self.Course.with_user(self.user_registrar).browse(self.course_bsit.id)
-        self.assertEqual(course.name, "BS Information Technology")
+        self.assertEqual(course.name, self.course_bsit.name)
 
     def test_registrar_cannot_create_a_course(self):
         """The course list is configuration, not day-to-day data entry."""
         with self.assertRaises(AccessError):
-            self.Course.with_user(self.user_registrar).create({"code": "SNEAK", "name": "Unauthorised Course"})
+            self.Course.with_user(self.user_registrar).create({"code": "TEST-SNEAK", "name": "Unauthorised Course"})
 
     def test_manager_can_delete_a_student(self):
         """Someone has to be able to remove a record created in error."""
@@ -49,7 +49,7 @@ class TestStudentSecurity(StudentCase):
 
     def test_manager_can_create_a_course(self):
         """Managing the course list is what separates the two roles."""
-        course = self.Course.with_user(self.user_manager).create({"code": "BSED", "name": "BS Education"})
+        course = self.Course.with_user(self.user_manager).create({"code": "TEST-BSED", "name": "Test BS Education"})
         self.assertTrue(course.exists())
 
     def test_manager_inherits_registrar_rights(self):
