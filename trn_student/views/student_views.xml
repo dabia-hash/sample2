@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_trn_student_form" model="ir.ui.view">
+        <field name="name">trn.student.form</field>
+        <field name="model">trn.student</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
+                    <div class="oe_title">
+                        <label for="id_number"/>
+                        <h1>
+                            <field name="id_number" placeholder="e.g. 2026-00431"/>
+                        </h1>
+                        <label for="name"/>
+                        <h2>
+                            <field name="name" placeholder="e.g. Maria Santos"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="course_id"/>
+                            <field name="year_level"/>
+                        </group>
+                        <group>
+                            <field name="school_year" placeholder="e.g. 2026-2027"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <group name="additional_student_details" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_trn_student_list" model="ir.ui.view">
+        <field name="name">trn.student.list</field>
+        <field name="model">trn.student</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="id_number"/>
+                <field name="name"/>
+                <field name="course_id"/>
+                <field name="year_level"/>
+                <field name="school_year"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_trn_student_search" model="ir.ui.view">
+        <field name="name">trn.student.search</field>
+        <field name="model">trn.student</field>
+        <field name="arch" type="xml">
+            <search>
+                <field
+                    name="id_number"
+                    string="Student"
+                    filter_domain="['|', ('id_number', 'ilike', self), ('name', 'ilike', self)]"
+                />
+                <field name="course_id"/>
+                <field name="school_year"/>
+                <filter name="filter_year_1" string="1st Year" domain="[('year_level', '=', '1')]"/>
+                <filter name="filter_year_2" string="2nd Year" domain="[('year_level', '=', '2')]"/>
+                <filter name="filter_year_3" string="3rd Year" domain="[('year_level', '=', '3')]"/>
+                <filter name="filter_year_4" string="4th Year" domain="[('year_level', '=', '4')]"/>
+                <separator/>
+                <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group name="group_by">
+                    <filter name="group_by_course" string="Course" context="{'group_by': 'course_id'}"/>
+                    <filter
+                        name="group_by_year_level"
+                        string="Year Level"
+                        context="{'group_by': 'year_level'}"
+                    />
+                    <filter
+                        name="group_by_school_year"
+                        string="Academic Year"
+                        context="{'group_by': 'school_year'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_trn_student" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">trn.student</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_trn_student_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Enrol a student</p>
+            <p>
+                Each student needs an ID number of their own, a name, a course
+                and a year. Archive students who leave rather than deleting them.
+            </p>
+        </field>
+    </record>
+</odoo>

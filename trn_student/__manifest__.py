@@ -12,6 +12,9 @@
     "data": [
         "security/security_groups.xml",
         "security/ir.model.access.csv",
+        "views/student_views.xml",
+        "views/course_views.xml",
+        "views/menus.xml",
     ],
     "demo": [],
     "auto_install": False,
