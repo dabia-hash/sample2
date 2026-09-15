@@ -869,8 +869,12 @@ class TestStudentSecurity(StudentCase):
         self.assertTrue(course.exists())
 
     def test_manager_inherits_registrar_rights(self):
-        """A manager should never have to switch roles to enrol a student."""
-        self.assertIn(self.group_registrar, self.user_manager.group_ids)
+        """A manager should never have to switch roles to enrol a student.
+
+        group_ids holds only explicitly assigned groups in Odoo 19; the implied
+        ones land in all_group_ids, which is what "inherits" means here.
+        """
+        self.assertIn(self.group_registrar, self.user_manager.all_group_ids)
 ```
 
 - [ ] **Step 2: Run test to verify it fails**

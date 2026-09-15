@@ -1,3 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_trn_course_system,trn.course / System,model_trn_course,base.group_system,1,1,1,1
 access_trn_student_system,trn.student / System,model_trn_student,base.group_system,1,1,1,1
+access_trn_course_registrar,trn.course / Registrar,model_trn_course,group_student_registrar,1,0,0,0
+access_trn_course_manager,trn.course / Manager,model_trn_course,group_student_manager,1,1,1,1
+access_trn_student_registrar,trn.student / Registrar,model_trn_student,group_student_registrar,1,1,1,0
+access_trn_student_manager,trn.student / Manager,model_trn_student,group_student_manager,1,1,1,1

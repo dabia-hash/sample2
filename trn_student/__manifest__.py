@@ -10,6 +10,7 @@
     "maintainers": [],
     "depends": ["base"],
     "data": [
+        "security/security_groups.xml",
         "security/ir.model.access.csv",
     ],
     "demo": [],
