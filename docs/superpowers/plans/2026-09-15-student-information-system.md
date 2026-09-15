@@ -114,8 +114,10 @@ class TestCourse(StudentCase):
 
     def test_course_is_found_by_code_or_by_name(self):
         """Registrars type whichever they remember."""
-        self.assertIn(self.course_bsit, self.Course.search([("display_name", "ilike", "BSIT")]))
-        self.assertIn(self.course_bsit, self.Course.search([("display_name", "ilike", "Information")]))
+        by_code = [match[0] for match in self.Course.name_search("BSIT")]
+        by_name = [match[0] for match in self.Course.name_search("Information")]
+        self.assertIn(self.course_bsit.id, by_code)
+        self.assertIn(self.course_bsit.id, by_name)
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -456,10 +458,10 @@ class TestStudent(StudentCase):
     def test_student_is_found_by_id_number_or_by_name(self):
         """Registrars search by whichever the enquirer gave them."""
         student = self._new_student()
-        by_number = self.Student.search([("display_name", "ilike", "2026-00431")])
-        by_name = self.Student.search([("display_name", "ilike", "Santos")])
-        self.assertIn(student, by_number)
-        self.assertIn(student, by_name)
+        by_number = [match[0] for match in self.Student.name_search("2026-00431")]
+        by_name = [match[0] for match in self.Student.name_search("Santos")]
+        self.assertIn(student.id, by_number)
+        self.assertIn(student.id, by_name)
 
     @mute_logger("odoo.sql_db")
     def test_database_refuses_a_duplicate_even_without_the_orm_check(self):
@@ -692,6 +694,7 @@ Append to `TestCourse` in `trn_student/tests/test_course.py`:
         self.course_bsit.invalidate_recordset(["student_ids", "student_count"])
         self.assertEqual(self.course_bsit.student_count, 0)
 
+    @mute_logger("odoo.sql_db")
     def test_a_course_with_students_cannot_be_deleted(self):
         """Deleting it would orphan every student enrolled in it."""
         self._new_student()
