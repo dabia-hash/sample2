@@ -39,7 +39,7 @@ class Course(models.Model):
         help="Students currently enrolled in this course",
     )
     student_count = fields.Integer(
-        string="Students",
+        string="Student Count",
         compute="_compute_student_count",
         help="How many active students are enrolled in this course",
     )

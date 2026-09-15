@@ -1,3 +1,5 @@
+from psycopg2.errors import RestrictViolation
+
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 
@@ -59,7 +61,7 @@ class TestCourse(StudentCase):
     def test_a_course_with_students_cannot_be_deleted(self):
         """Deleting it would orphan every student enrolled in it."""
         self._new_student()
-        with self.assertRaises(Exception):
+        with self.assertRaises(RestrictViolation):
             self.course_bsit.unlink()
 
     def test_an_empty_course_can_be_deleted(self):

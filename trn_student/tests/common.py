@@ -21,9 +21,7 @@ class StudentCase(TransactionCase):
         cls.Course = cls.env["trn.course"]
         cls.Student = cls.env["trn.student"]
 
-        cls.course_bsit = cls.Course.create(
-            {"code": "TEST-BSIT", "name": "Test BS Information Technology"}
-        )
+        cls.course_bsit = cls.Course.create({"code": "TEST-BSIT", "name": "Test BS Information Technology"})
 
         Users = cls.env["res.users"]
         cls.group_registrar = cls.env.ref("trn_student.group_student_registrar")

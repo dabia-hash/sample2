@@ -112,8 +112,7 @@ class Student(models.Model):
         if existing:
             raise ValidationError(
                 _(
-                    "ID number '%(id_number)s' already belongs to %(name)s. "
-                    "Every student needs their own number.",
+                    "ID number '%(id_number)s' already belongs to %(name)s. " "Every student needs their own number.",
                     id_number=id_number,
                     name=existing.name,
                 )

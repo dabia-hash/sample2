@@ -1,4 +1,5 @@
 from psycopg2 import IntegrityError
+from psycopg2.errors import NotNullViolation
 
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
@@ -75,13 +76,13 @@ class TestStudent(StudentCase):
     @mute_logger("odoo.sql_db")
     def test_course_is_required(self):
         """A student with no course cannot be scheduled or reported on."""
-        with self.assertRaises(Exception):
+        with self.assertRaises(NotNullViolation):
             self._new_student(course_id=False)
 
     @mute_logger("odoo.sql_db")
     def test_year_level_is_required(self):
         """Year level drives nearly every registrar filter."""
-        with self.assertRaises(Exception):
+        with self.assertRaises(NotNullViolation):
             self._new_student(year_level=False)
 
     def test_display_name_shows_id_number_and_name(self):
