@@ -32,6 +32,17 @@ class Course(models.Model):
         default=True,
         help="Archive a course that is no longer offered instead of deleting it",
     )
+    student_ids = fields.One2many(
+        comodel_name="trn.student",
+        inverse_name="course_id",
+        string="Students",
+        help="Students currently enrolled in this course",
+    )
+    student_count = fields.Integer(
+        string="Students",
+        compute="_compute_student_count",
+        help="How many active students are enrolled in this course",
+    )
 
     _unique_code = models.Constraint(
         "UNIQUE(code)",
@@ -43,6 +54,12 @@ class Course(models.Model):
         """Show 'BSIT — BS Information Technology' rather than a bare code."""
         for course in self:
             course.display_name = f"{course.code} — {course.name}"
+
+    @api.depends("student_ids")
+    def _compute_student_count(self):
+        """Count enrolled students so the list view can show course size."""
+        for course in self:
+            course.student_count = len(course.student_ids)
 
     @api.model_create_multi
     def create(self, vals_list):

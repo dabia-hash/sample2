@@ -1,4 +1,5 @@
 from odoo.exceptions import ValidationError
+from odoo.tools import mute_logger
 
 from .common import StudentCase
 
@@ -36,3 +37,30 @@ class TestCourse(StudentCase):
         by_name = [match[0] for match in self.Course.name_search("Information")]
         self.assertIn(self.course_bsit.id, by_code)
         self.assertIn(self.course_bsit.id, by_name)
+
+    def test_student_count_reflects_enrolled_students(self):
+        """A registrar sizing a course should not have to run a report."""
+        self.assertEqual(self.course_bsit.student_count, 0)
+        self._new_student()
+        self.course_bsit.invalidate_recordset(["student_ids", "student_count"])
+        self.assertEqual(self.course_bsit.student_count, 1)
+
+    def test_student_count_ignores_archived_students(self):
+        """Graduated students should not inflate the size of a course."""
+        student = self._new_student()
+        student.active = False
+        self.course_bsit.invalidate_recordset(["student_ids", "student_count"])
+        self.assertEqual(self.course_bsit.student_count, 0)
+
+    @mute_logger("odoo.sql_db")
+    def test_a_course_with_students_cannot_be_deleted(self):
+        """Deleting it would orphan every student enrolled in it."""
+        self._new_student()
+        with self.assertRaises(Exception):
+            self.course_bsit.unlink()
+
+    def test_an_empty_course_can_be_deleted(self):
+        """A course added by mistake should not be permanent."""
+        spare = self.Course.create({"code": "SPARE", "name": "Spare Course"})
+        spare.unlink()
+        self.assertFalse(spare.exists())
