@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_trn_course_system,trn.course / System,model_trn_course,base.group_system,1,1,1,1
+access_trn_student_system,trn.student / System,model_trn_student,base.group_system,1,1,1,1
