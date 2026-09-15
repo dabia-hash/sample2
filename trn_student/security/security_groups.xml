@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="category_trn_student" model="ir.module.category">
-        <field name="name">trn Student</field>
-        <field name="sequence">10</field>
-    </record>
-
     <record id="privilege_student" model="res.groups.privilege">
         <field name="name">Students</field>
-        <field name="category_id" ref="category_trn_student"/>
+        <field name="category_id" ref="trn_security.category_trn_student"/>
     </record>
 
     <!-- Registrar: enrols and maintains students. -->
@@ -26,5 +21,13 @@ Courses are read-only.</field>
 Implies Registrar permissions.</field>
         <field name="privilege_id" ref="privilege_student"/>
         <field name="implied_ids" eval="[Command.link(ref('group_student_registrar'))]"/>
+    </record>
+
+    <!--
+        The suite administrator inherits this module's manager rights, so
+        Administration is granted once rather than per module.
+    -->
+    <record id="trn_security.group_trn_admin" model="res.groups">
+        <field name="implied_ids" eval="[Command.link(ref('group_student_manager'))]"/>
     </record>
 </odoo>

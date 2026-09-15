@@ -8,7 +8,7 @@
     "license": "LGPL-3",
     "development_status": "Alpha",
     "maintainers": [],
-    "depends": ["base"],
+    "depends": ["base", "trn_security"],
     "data": [
         "security/security_groups.xml",
         "security/ir.model.access.csv",
@@ -20,6 +20,6 @@
         "demo/student_demo.xml",
     ],
     "auto_install": False,
-    "application": True,
+    "application": False,
     "installable": True,
 }

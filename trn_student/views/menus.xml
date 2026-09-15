@@ -4,6 +4,7 @@
         id="menu_student_root"
         name="Students"
         sequence="80"
+        web_icon="fa-graduation-cap,#FFFFFF,#7C3AED"
         groups="trn_student.group_student_registrar"
     />
 

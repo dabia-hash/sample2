@@ -4,6 +4,7 @@
         id="menu_service_request_root"
         name="Service Requests"
         sequence="85"
+        web_icon="fa-life-ring,#FFFFFF,#0F766E"
         groups="trn_service_request.group_service_request_user"
     />
 

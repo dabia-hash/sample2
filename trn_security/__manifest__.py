@@ -1,0 +1,20 @@
+{
+    "name": "trn Security",
+    "version": "19.0.1.0.0",
+    "category": "trn/Core",
+    "summary": "Shared privilege categories and the cross-module administrator group",
+    "author": "Your Organization",
+    "website": "",
+    "license": "LGPL-3",
+    "development_status": "Alpha",
+    "maintainers": [],
+    "depends": ["base"],
+    "data": [
+        "security/categories.xml",
+        "security/groups.xml",
+    ],
+    "demo": [],
+    "auto_install": False,
+    "application": False,
+    "installable": True,
+}

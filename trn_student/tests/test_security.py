@@ -52,6 +52,16 @@ class TestStudentSecurity(StudentCase):
         course = self.Course.with_user(self.user_manager).create({"code": "TEST-BSED", "name": "Test BS Education"})
         self.assertTrue(course.exists())
 
+    def test_suite_administrator_inherits_manager_rights(self):
+        """Granting Administration once must carry this module's manager rights.
+
+        trn_security.group_trn_admin is linked to group_student_manager from this
+        module's security_groups.xml; without that link an administrator would
+        have to be given every module's manager group by hand.
+        """
+        admin_group = self.env.ref("trn_security.group_trn_admin")
+        self.assertIn(self.group_manager, admin_group.implied_ids)
+
     def test_manager_inherits_registrar_rights(self):
         """A manager should never have to switch roles to enrol a student.
 
