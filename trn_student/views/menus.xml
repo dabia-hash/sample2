@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_student_root"
+        name="Students"
+        sequence="80"
+        web_icon="fa-graduation-cap,#FFFFFF,#7C3AED"
+        groups="trn_student.group_student_registrar"
+    />
+
+    <menuitem id="menu_student_records" name="Students" parent="menu_student_root" sequence="10"/>
+    <menuitem
+        id="menu_student_list"
+        name="All Students"
+        parent="menu_student_records"
+        action="action_trn_student"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_student_configuration"
+        name="Configuration"
+        parent="menu_student_root"
+        sequence="90"
+        groups="trn_student.group_student_manager"
+    />
+    <menuitem
+        id="menu_student_course"
+        name="Courses"
+        parent="menu_student_configuration"
+        action="action_trn_course"
+        sequence="10"
+    />
+</odoo>

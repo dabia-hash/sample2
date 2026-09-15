@@ -73,6 +73,22 @@ Layer 0: ODOO CORE (base, hr, stock, account, calendar)
 - Demo data must create **complete, consistent records** — check all required relations
 - Use `with_context(tracking_disable=True)` to avoid sending notifications
 - Test demo data generation with dedicated tests
+- **Test fixtures must not collide with demo data on unique fields.** A fixture creating code `BSIT` breaks every test
+  class in `setUpClass` on a `--with-demo` database if demo ships the same code. Prefix fixture codes and identifiers
+  with `TEST-` (see `trn_student/tests/common.py`)
+- Demo data does **not** load in normal test runs — Odoo 19 omits it without `--with-demo`, so a test asserting on demo
+  records must skip when they are absent, and you must run the module once with `--with-demo` to prove those assertions
+  actually execute
+
+### Odoo 19 API Gotchas
+
+- `res.users.group_ids` holds only **explicitly assigned** groups; implied groups are in `all_group_ids`. Assert group
+  inheritance against `all_group_ids`
+- `expand` is not a valid attribute on `<group>` in a search view — use a bare `<group name="group_by">`
+- Two fields on one model must not share a `string` label, or the registry logs a warning (e.g. `student_ids` and
+  `student_count` both labelled "Students")
+- `assertRaises(Exception)` trips ruff B017. Missing required fields raise `psycopg2.errors.NotNullViolation`;
+  `ondelete="restrict"` raises `psycopg2.errors.RestrictViolation`
 
 ### State Machines and Approvals
 

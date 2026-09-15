@@ -1,0 +1,25 @@
+{
+    "name": "trn Student",
+    "version": "19.0.1.0.0",
+    "category": "trn/Education",
+    "summary": "Student records: ID number, name, course and year",
+    "author": "Your Organization",
+    "website": "",
+    "license": "LGPL-3",
+    "development_status": "Alpha",
+    "maintainers": [],
+    "depends": ["base", "trn_security"],
+    "data": [
+        "security/security_groups.xml",
+        "security/ir.model.access.csv",
+        "views/student_views.xml",
+        "views/course_views.xml",
+        "views/menus.xml",
+    ],
+    "demo": [
+        "demo/student_demo.xml",
+    ],
+    "auto_install": False,
+    "application": False,
+    "installable": True,
+}

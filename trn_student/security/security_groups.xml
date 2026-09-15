@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="privilege_student" model="res.groups.privilege">
+        <field name="name">Students</field>
+        <field name="category_id" ref="trn_security.category_trn_student"/>
+    </record>
+
+    <!-- Registrar: enrols and maintains students. -->
+    <record id="group_student_registrar" model="res.groups">
+        <field name="name">Student: Registrar</field>
+        <field name="comment">Enrol students and maintain their records.
+Courses are read-only.</field>
+        <field name="privilege_id" ref="privilege_student"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Manager: maintains the course list and may delete records. -->
+    <record id="group_student_manager" model="res.groups">
+        <field name="name">Student: Registrar Manager</field>
+        <field name="comment">Maintain the course list and delete student records.
+Implies Registrar permissions.</field>
+        <field name="privilege_id" ref="privilege_student"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_student_registrar'))]"/>
+    </record>
+
+    <!--
+        The suite administrator inherits this module's manager rights, so
+        Administration is granted once rather than per module.
+    -->
+    <record id="trn_security.group_trn_admin" model="res.groups">
+        <field name="implied_ids" eval="[Command.link(ref('group_student_manager'))]"/>
+    </record>
+</odoo>

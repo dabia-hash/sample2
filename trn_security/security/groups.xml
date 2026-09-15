@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="privilege_trn_admin" model="res.groups.privilege">
+        <field name="name">Administration</field>
+        <field name="category_id" ref="category_trn"/>
+    </record>
+
+    <!--
+        One administrator group across the whole suite.
+
+        Domain modules link their own manager group into this group's implied_ids,
+        so granting Administration once carries manager rights everywhere instead
+        of requiring a box ticked per module.
+    -->
+    <record id="group_trn_admin" model="res.groups">
+        <field name="name">trn: Administrator</field>
+        <field name="comment">Administer every trn module.
+Implies the manager group of each installed domain module.</field>
+        <field name="privilege_id" ref="privilege_trn_admin"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+</odoo>

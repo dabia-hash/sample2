@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Privilege categories for the whole trn suite.
+
+        These live here rather than in each domain module so there is exactly one
+        category per domain: audit-security raises an ARCHITECTURE error for any
+        ir.module.category defined outside trn_security. Domain modules reference
+        these by xml id from their own res.groups.privilege records.
+
+        Hierarchy follows docs/principles/module-visibility.md: Training Sample/{Domain}.
+    -->
+    <record id="category_trn" model="ir.module.category">
+        <field name="name">Training Sample</field>
+        <field name="description">Privileges for the trn module suite</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="category_trn_student" model="ir.module.category">
+        <field name="name">Student</field>
+        <field name="parent_id" ref="category_trn"/>
+        <field name="sequence">20</field>
+    </record>
+</odoo>
