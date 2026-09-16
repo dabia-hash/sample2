@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="faculty_reyes" model="trn.faculty">
+        <field name="code">REYES-J</field>
+        <field name="name">Prof. Juan Reyes</field>
+        <field name="department_id" ref="department_ccs"/>
+    </record>
+    <record id="faculty_cruz" model="trn.faculty">
+        <field name="code">CRUZ-M</field>
+        <field name="name">Prof. Maria Cruz</field>
+        <field name="department_id" ref="department_ccs"/>
+    </record>
+    <record id="faculty_lim" model="trn.faculty">
+        <field name="code">LIM-A</field>
+        <field name="name">Prof. Andres Lim</field>
+        <field name="department_id" ref="department_ced"/>
+    </record>
+
+    <record id="subject_it101" model="trn.subject">
+        <field name="code">IT101</field>
+        <field name="name">Programming 1</field>
+        <field name="units">3.0</field>
+        <field name="department_id" ref="department_ccs"/>
+    </record>
+    <record id="subject_it102" model="trn.subject">
+        <field name="code">IT102</field>
+        <field name="name">Programming 2</field>
+        <field name="units">3.0</field>
+        <field name="department_id" ref="department_ccs"/>
+    </record>
+    <record id="subject_cs101" model="trn.subject">
+        <field name="code">CS101</field>
+        <field name="name">Discrete Structures</field>
+        <field name="units">3.0</field>
+        <field name="department_id" ref="department_ccs"/>
+    </record>
+    <!-- General education: taught across colleges, so no department. -->
+    <record id="subject_math1" model="trn.subject">
+        <field name="code">MATH1</field>
+        <field name="name">College Algebra</field>
+        <field name="units">3.0</field>
+    </record>
+    <record id="subject_pe1" model="trn.subject">
+        <field name="code">PE1</field>
+        <field name="name">Physical Education 1</field>
+        <field name="units">2.0</field>
+    </record>
+
+    <!-- First semester offerings -->
+    <record id="offering_it101_sem1" model="trn.subject.offering">
+        <field name="subject_id" ref="subject_it101"/>
+        <field name="school_year">2026-2027</field>
+        <field name="semester">1</field>
+        <field name="faculty_id" ref="faculty_reyes"/>
+    </record>
+    <record id="offering_math1_sem1" model="trn.subject.offering">
+        <field name="subject_id" ref="subject_math1"/>
+        <field name="school_year">2026-2027</field>
+        <field name="semester">1</field>
+        <field name="faculty_id" ref="faculty_lim"/>
+    </record>
+    <record id="offering_pe1_sem1" model="trn.subject.offering">
+        <field name="subject_id" ref="subject_pe1"/>
+        <field name="school_year">2026-2027</field>
+        <field name="semester">1</field>
+        <field name="faculty_id" ref="faculty_lim"/>
+    </record>
+    <record id="offering_cs101_sem1" model="trn.subject.offering">
+        <field name="subject_id" ref="subject_cs101"/>
+        <field name="school_year">2026-2027</field>
+        <field name="semester">1</field>
+        <field name="faculty_id" ref="faculty_cruz"/>
+    </record>
+
+    <!-- Second semester offerings: IT102 is taught by a different professor -->
+    <record id="offering_it102_sem2" model="trn.subject.offering">
+        <field name="subject_id" ref="subject_it102"/>
+        <field name="school_year">2026-2027</field>
+        <field name="semester">2</field>
+        <field name="faculty_id" ref="faculty_cruz"/>
+    </record>
+    <record id="offering_pe1_sem2" model="trn.subject.offering">
+        <field name="subject_id" ref="subject_pe1"/>
+        <field name="school_year">2026-2027</field>
+        <field name="semester">2</field>
+        <field name="faculty_id" ref="faculty_lim"/>
+    </record>
+
+    <!--
+        Maria Santos takes three subjects in the first semester and is fully
+        graded; her second-semester row is still ungraded, which is what most
+        of a running term looks like.
+    -->
+    <record id="grade_student_1_it101" model="trn.grade">
+        <field name="student_id" ref="student_1"/>
+        <field name="offering_id" ref="offering_it101_sem1"/>
+        <field name="grade">1.75</field>
+    </record>
+    <record id="grade_student_1_math1" model="trn.grade">
+        <field name="student_id" ref="student_1"/>
+        <field name="offering_id" ref="offering_math1_sem1"/>
+        <field name="grade">2.00</field>
+    </record>
+    <record id="grade_student_1_pe1" model="trn.grade">
+        <field name="student_id" ref="student_1"/>
+        <field name="offering_id" ref="offering_pe1_sem1"/>
+        <field name="grade">1.25</field>
+    </record>
+    <record id="grade_student_1_sem2_it102" model="trn.grade">
+        <field name="student_id" ref="student_1_sem2"/>
+        <field name="offering_id" ref="offering_it102_sem2"/>
+    </record>
+    <record id="grade_student_1_sem2_pe1" model="trn.grade">
+        <field name="student_id" ref="student_1_sem2"/>
+        <field name="offering_id" ref="offering_pe1_sem2"/>
+    </record>
+
+    <!-- Jose Rivera shares the IT101 class with Maria: many students, one subject. -->
+    <record id="grade_student_2_it101" model="trn.grade">
+        <field name="student_id" ref="student_2"/>
+        <field name="offering_id" ref="offering_it101_sem1"/>
+        <field name="grade">2.50</field>
+    </record>
+    <record id="grade_student_2_math1" model="trn.grade">
+        <field name="student_id" ref="student_2"/>
+        <field name="offering_id" ref="offering_math1_sem1"/>
+        <field name="grade">5.00</field>
+    </record>
+
+    <!-- Ana Dela Cruz carries an incomplete into the second semester. -->
+    <record id="grade_student_3_cs101" model="trn.grade">
+        <field name="student_id" ref="student_3"/>
+        <field name="offering_id" ref="offering_cs101_sem1"/>
+        <field name="grade">INC</field>
+    </record>
+    <record id="grade_student_3_math1" model="trn.grade">
+        <field name="student_id" ref="student_3"/>
+        <field name="offering_id" ref="offering_math1_sem1"/>
+        <field name="grade">1.50</field>
+    </record>
+    <record id="grade_student_3_sem2_it102" model="trn.grade">
+        <field name="student_id" ref="student_3_sem2"/>
+        <field name="offering_id" ref="offering_it102_sem2"/>
+    </record>
+</odoo>

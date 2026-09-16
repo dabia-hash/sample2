@@ -38,6 +38,20 @@
                             <field name="active" invisible="1"/>
                         </group>
                     </group>
+                    <separator string="Subjects &amp; Grades"/>
+                    <field name="grade_ids" nolabel="1">
+                        <list editable="bottom">
+                            <field
+                                name="offering_id"
+                                options="{'no_create': True}"
+                                domain="[('school_year', '=', parent.school_year), ('semester', '=', parent.semester)]"
+                            />
+                            <field name="faculty_id" readonly="1"/>
+                            <field name="units" readonly="1"/>
+                            <field name="grade"/>
+                            <field name="is_passing" readonly="1" optional="hide"/>
+                        </list>
+                    </field>
                     <group name="additional_student_details" invisible="1"/>
                 </sheet>
             </form>

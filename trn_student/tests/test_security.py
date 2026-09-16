@@ -75,6 +75,61 @@ class TestStudentSecurity(StudentCase):
         )
         self.assertTrue(readmission.enrollment_number)
 
+    def test_registrar_can_read_subjects_and_faculty(self):
+        """They must pick both when enrolling a student in a class."""
+        subject = self.Subject.with_user(self.user_registrar).browse(self.subject_it101.id)
+        faculty = self.Faculty.with_user(self.user_registrar).browse(self.faculty_reyes.id)
+        self.assertEqual(subject.name, self.subject_it101.name)
+        self.assertEqual(faculty.name, self.faculty_reyes.name)
+
+    def test_registrar_cannot_maintain_the_subject_catalogue(self):
+        """Subjects are configuration, like courses and departments."""
+        with self.assertRaises(AccessError):
+            self.Subject.with_user(self.user_registrar).create(
+                {"code": "TEST-SNEAK-SUBJ", "name": "Unauthorised Subject"}
+            )
+
+    def test_registrar_cannot_create_an_offering(self):
+        """Deciding what runs this term is not the registrar's call."""
+        with self.assertRaises(AccessError):
+            self.Offering.with_user(self.user_registrar).create(
+                {
+                    "subject_id": self.subject_it101.id,
+                    "school_year": "2026-2027",
+                    "semester": "S",
+                }
+            )
+
+    def test_registrar_can_enrol_a_student_in_a_subject(self):
+        """Enrolling students in classes is the registrar's day job."""
+        student = self._new_student()
+        grade = self.Grade.with_user(self.user_registrar).create(
+            {"student_id": student.id, "offering_id": self.offering_it101.id}
+        )
+        self.assertTrue(grade.exists())
+
+    def test_registrar_can_record_a_mark(self):
+        """So is writing down the mark at the end of the term."""
+        grade = self._new_grade(student=self._new_student())
+        grade.with_user(self.user_registrar).write({"grade": "2.00"})
+        self.assertEqual(grade.grade, "2.00")
+
+    def test_registrar_cannot_delete_a_grade(self):
+        """Deleting a mark loses history; correcting it is the supported route."""
+        grade = self._new_grade(student=self._new_student())
+        with self.assertRaises(AccessError):
+            grade.with_user(self.user_registrar).unlink()
+
+    def test_manager_can_maintain_the_catalogue_and_offerings(self):
+        """Maintaining what is taught is what separates the two roles."""
+        subject = self.Subject.with_user(self.user_manager).create(
+            {"code": "TEST-MGR-SUBJ", "name": "Test Manager Subject"}
+        )
+        offering = self.Offering.with_user(self.user_manager).create(
+            {"subject_id": subject.id, "school_year": "2026-2027", "semester": "1"}
+        )
+        self.assertTrue(offering.exists())
+
     def test_manager_can_delete_a_student(self):
         """Someone has to be able to remove a record created in error."""
         student = self._new_student()

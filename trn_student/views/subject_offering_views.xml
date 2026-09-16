@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_trn_subject_offering_form" model="ir.ui.view">
+        <field name="name">trn.subject.offering.form</field>
+        <field name="model">trn.subject.offering</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
+                    <div class="oe_title">
+                        <label for="subject_id"/>
+                        <h1>
+                            <field name="subject_id" options="{'no_create': True}"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="school_year" placeholder="e.g. 2026-2027"/>
+                            <field name="semester"/>
+                        </group>
+                        <group>
+                            <field name="faculty_id" placeholder="Unassigned (TBA)"/>
+                            <field name="student_count"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <separator string="Class List"/>
+                    <field name="grade_ids" nolabel="1">
+                        <list editable="bottom">
+                            <field name="enrollment_number" readonly="1"/>
+                            <field name="student_id" options="{'no_create': True}"/>
+                            <field name="course_id" readonly="1"/>
+                            <field name="grade"/>
+                            <field name="is_passing" readonly="1" optional="hide"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_trn_subject_offering_list" model="ir.ui.view">
+        <field name="name">trn.subject.offering.list</field>
+        <field name="model">trn.subject.offering</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="subject_id"/>
+                <field name="school_year"/>
+                <field name="semester"/>
+                <field name="faculty_id"/>
+                <field name="student_count"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_trn_subject_offering_search" model="ir.ui.view">
+        <field name="name">trn.subject.offering.search</field>
+        <field name="model">trn.subject.offering</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="subject_id"/>
+                <field name="faculty_id"/>
+                <field name="school_year"/>
+                <field name="semester"/>
+                <filter name="filter_semester_1" string="1st Semester" domain="[('semester', '=', '1')]"/>
+                <filter name="filter_semester_2" string="2nd Semester" domain="[('semester', '=', '2')]"/>
+                <filter name="filter_semester_summer" string="Summer" domain="[('semester', '=', 'S')]"/>
+                <separator/>
+                <filter name="filter_unstaffed" string="Unassigned" domain="[('faculty_id', '=', False)]"/>
+                <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group name="group_by">
+                    <filter name="group_by_subject" string="Subject" context="{'group_by': 'subject_id'}"/>
+                    <filter name="group_by_faculty" string="Professor" context="{'group_by': 'faculty_id'}"/>
+                    <filter
+                        name="group_by_school_year"
+                        string="Academic Year"
+                        context="{'group_by': 'school_year'}"
+                    />
+                    <filter name="group_by_semester" string="Semester" context="{'group_by': 'semester'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_trn_subject_offering" model="ir.actions.act_window">
+        <field name="name">Subject Offerings</field>
+        <field name="res_model">trn.subject.offering</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_trn_subject_offering_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Offer a subject this term</p>
+            <p>
+                An offering is one subject in one semester, taught by one
+                professor. Students are enrolled into it, and their grades are
+                recorded on its class list.
+            </p>
+        </field>
+    </record>
+</odoo>

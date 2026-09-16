@@ -19,6 +19,10 @@ class StudentCase(TransactionCase):
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         cls.Department = cls.env["trn.department"]
+        cls.Subject = cls.env["trn.subject"]
+        cls.Faculty = cls.env["trn.faculty"]
+        cls.Offering = cls.env["trn.subject.offering"]
+        cls.Grade = cls.env["trn.grade"]
         cls.Course = cls.env["trn.course"]
         cls.Student = cls.env["trn.student"]
 
@@ -28,6 +32,17 @@ class StudentCase(TransactionCase):
                 "code": "TEST-BSIT",
                 "name": "Test BS Information Technology",
                 "department_id": cls.department_ccs.id,
+            }
+        )
+
+        cls.subject_it101 = cls.Subject.create({"code": "TEST-IT101", "name": "Test Programming 1", "units": 3.0})
+        cls.faculty_reyes = cls.Faculty.create({"code": "TEST-REYES", "name": "Prof. Juan Reyes"})
+        cls.offering_it101 = cls.Offering.create(
+            {
+                "subject_id": cls.subject_it101.id,
+                "school_year": "2026-2027",
+                "semester": "1",
+                "faculty_id": cls.faculty_reyes.id,
             }
         )
 
@@ -62,3 +77,32 @@ class StudentCase(TransactionCase):
         }
         values.update(overrides)
         return cls.Student.create(values)
+
+    @classmethod
+    def _new_offering(cls, **overrides):
+        """Create another offering of the test subject unless told otherwise."""
+        values = {
+            "subject_id": cls.subject_it101.id,
+            "school_year": "2026-2027",
+            "semester": "1",
+            "faculty_id": cls.faculty_reyes.id,
+        }
+        values.update(overrides)
+        return cls.Offering.create(values)
+
+    @classmethod
+    def _new_subject(cls, code, **overrides):
+        """Create another subject, so a student can take more than one."""
+        values = {"code": code, "name": f"Test Subject {code}", "units": 3.0}
+        values.update(overrides)
+        return cls.Subject.create(values)
+
+    @classmethod
+    def _new_grade(cls, student=None, offering=None, **overrides):
+        """Enrol a student in an offering; grade stays blank unless given."""
+        values = {
+            "student_id": (student or cls._new_student()).id,
+            "offering_id": (offering or cls.offering_it101).id,
+        }
+        values.update(overrides)
+        return cls.Grade.create(values)

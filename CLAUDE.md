@@ -95,6 +95,10 @@ Layer 0: ODOO CORE (base, hr, stock, account, calendar)
   not at install — handle `in`/`not in` too
 - A friendly duplicate message needs a check **before** the insert. `@api.constrains` runs after the SQL `UNIQUE`
   constraint has already fired, so the user gets a Postgres error instead of your `ValidationError`
+- A `One2many` whose `comodel_name` does not exist yet kills the **whole registry**
+  (`assert self.comodel_name in model.pool`), not just that model, and the test run reports `Failed to load registry`
+  with no test results. Add the comodel in the same change as the field that points at it
+- `ir.ui.menu.complete_name` is computed, not stored, so it cannot appear in a search domain. Filter on `parent_id`
 
 ### Migrations
 

@@ -1,8 +1,14 @@
-import re
-
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from .academic_term import (
+    SEMESTER_CODES,
+    SEMESTER_SELECTION,
+    SEMESTER_SHORT,
+    check_school_year,
+    default_school_year,
+    term_label,
+)
 from .normalize import normalize_code
 
 YEAR_LEVEL_SELECTION = [
@@ -11,19 +17,6 @@ YEAR_LEVEL_SELECTION = [
     ("3", "3rd Year"),
     ("4", "4th Year"),
 ]
-
-SEMESTER_SELECTION = [
-    ("1", "1st Semester"),
-    ("2", "2nd Semester"),
-    ("S", "Summer"),
-]
-
-# Segment used in the enrollment number, and the short form shown in
-# display_name. The selection label itself is too long for a dropdown.
-SEMESTER_CODES = {"1": "1ST", "2": "2ND", "S": "SUM"}
-SEMESTER_SHORT = {"1": "1st Sem", "2": "2nd Sem", "S": "Summer"}
-
-SCHOOL_YEAR_PATTERN = re.compile(r"^(\d{4})-(\d{4})$")
 
 
 class Student(models.Model):
@@ -94,6 +87,12 @@ class Student(models.Model):
         default=lambda self: self._default_school_year(),
         help="Academic year this record covers, as 'YYYY-YYYY', e.g. '2026-2027'",
     )
+    grade_ids = fields.One2many(
+        comodel_name="trn.grade",
+        inverse_name="student_id",
+        string="Subjects & Grades",
+        help="Subjects this student is taking this term, and the marks earned",
+    )
     is_current_year = fields.Boolean(
         string="Current Academic Year",
         compute="_compute_is_current_year",
@@ -117,8 +116,7 @@ class Student(models.Model):
     @api.model
     def _default_school_year(self):
         """Offer the academic year starting this calendar year."""
-        this_year = fields.Date.context_today(self).year
-        return f"{this_year}-{this_year + 1}"
+        return default_school_year(self)
 
     @api.depends("school_year")
     def _compute_is_current_year(self):
@@ -258,13 +256,12 @@ class Student(models.Model):
             domain.append(("id", "!=", exclude.id))
         duplicate = self.with_context(active_test=False).search(domain, limit=1)
         if duplicate:
-            label = dict(SEMESTER_SELECTION).get(semester, "")
             raise ValidationError(
                 _(
                     "%(name)s is already admitted to %(term)s under ID number "
                     "'%(id_number)s'. A student is admitted to a term only once.",
                     name=duplicate.name,
-                    term=f"{label} {school_year}",
+                    term=term_label(semester, school_year),
                     id_number=id_number,
                 )
             )
@@ -273,21 +270,4 @@ class Student(models.Model):
     def _check_school_year(self):
         """An academic year must be two consecutive four-digit years."""
         for student in self:
-            match = SCHOOL_YEAR_PATTERN.match(student.school_year or "")
-            if not match:
-                raise ValidationError(
-                    _(
-                        "Academic year '%(value)s' must look like '2026-2027'.",
-                        value=student.school_year,
-                    )
-                )
-            start, end = int(match.group(1)), int(match.group(2))
-            if end != start + 1:
-                raise ValidationError(
-                    _(
-                        "Academic year '%(value)s' must span two consecutive " "years, so '%(start)s-%(expected)s'.",
-                        value=student.school_year,
-                        start=start,
-                        expected=start + 1,
-                    )
-                )
+            check_school_year(student.school_year)
