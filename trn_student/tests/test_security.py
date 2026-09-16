@@ -41,6 +41,40 @@ class TestStudentSecurity(StudentCase):
         with self.assertRaises(AccessError):
             self.Course.with_user(self.user_registrar).create({"code": "TEST-SNEAK", "name": "Unauthorised Course"})
 
+    def test_registrar_can_read_departments(self):
+        """The course they pick shows its department; reading it must not fail."""
+        department = self.Department.with_user(self.user_registrar).browse(self.department_ccs.id)
+        self.assertEqual(department.name, self.department_ccs.name)
+
+    def test_registrar_cannot_create_a_department(self):
+        """Departments are configuration, like the course list."""
+        with self.assertRaises(AccessError):
+            self.Department.with_user(self.user_registrar).create(
+                {"code": "TEST-SNEAK-DEPT", "name": "Unauthorised Department"}
+            )
+
+    def test_manager_can_create_a_department(self):
+        """Maintaining the department list belongs with the course list."""
+        department = self.Department.with_user(self.user_manager).create(
+            {"code": "TEST-CBA", "name": "Test College of Business Administration"}
+        )
+        self.assertTrue(department.exists())
+
+    def test_registrar_can_admit_a_returning_student(self):
+        """Re-enrolling an existing student each term is routine registrar work."""
+        self._new_student(semester="1")
+        readmission = self.Student.with_user(self.user_registrar).create(
+            {
+                "id_number": "TEST-2026-00431",
+                "name": "Maria Santos",
+                "course_id": self.course_bsit.id,
+                "year_level": "2",
+                "school_year": "2026-2027",
+                "semester": "2",
+            }
+        )
+        self.assertTrue(readmission.enrollment_number)
+
     def test_manager_can_delete_a_student(self):
         """Someone has to be able to remove a record created in error."""
         student = self._new_student()
@@ -49,7 +83,13 @@ class TestStudentSecurity(StudentCase):
 
     def test_manager_can_create_a_course(self):
         """Managing the course list is what separates the two roles."""
-        course = self.Course.with_user(self.user_manager).create({"code": "TEST-BSED", "name": "Test BS Education"})
+        course = self.Course.with_user(self.user_manager).create(
+            {
+                "code": "TEST-BSED",
+                "name": "Test BS Education",
+                "department_id": self.department_ccs.id,
+            }
+        )
         self.assertTrue(course.exists())
 
     def test_suite_administrator_inherits_manager_rights(self):

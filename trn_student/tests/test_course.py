@@ -16,7 +16,13 @@ class TestCourse(StudentCase):
 
     def test_course_code_is_uppercased(self):
         """'bsit' and 'BSIT' are the same course, so store one spelling."""
-        course = self.Course.create({"code": "  test bs cs  ", "name": "Test BS Computer Science"})
+        course = self.Course.create(
+            {
+                "code": "  test bs cs  ",
+                "name": "Test BS Computer Science",
+                "department_id": self.department_ccs.id,
+            }
+        )
         self.assertEqual(course.code, "TEST BS CS")
 
     def test_course_code_differing_only_by_case_is_a_duplicate(self):
@@ -66,6 +72,12 @@ class TestCourse(StudentCase):
 
     def test_an_empty_course_can_be_deleted(self):
         """A course added by mistake should not be permanent."""
-        spare = self.Course.create({"code": "TEST-SPARE", "name": "Spare Course"})
+        spare = self.Course.create(
+            {
+                "code": "TEST-SPARE",
+                "name": "Spare Course",
+                "department_id": self.department_ccs.id,
+            }
+        )
         spare.unlink()
         self.assertFalse(spare.exists())

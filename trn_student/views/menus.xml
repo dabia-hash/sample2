@@ -25,6 +25,13 @@
         groups="trn_student.group_student_manager"
     />
     <menuitem
+        id="menu_student_department"
+        name="Departments"
+        parent="menu_student_configuration"
+        action="action_trn_department"
+        sequence="5"
+    />
+    <menuitem
         id="menu_student_course"
         name="Courses"
         parent="menu_student_configuration"

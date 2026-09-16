@@ -18,10 +18,18 @@ class StudentCase(TransactionCase):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
+        cls.Department = cls.env["trn.department"]
         cls.Course = cls.env["trn.course"]
         cls.Student = cls.env["trn.student"]
 
-        cls.course_bsit = cls.Course.create({"code": "TEST-BSIT", "name": "Test BS Information Technology"})
+        cls.department_ccs = cls.Department.create({"code": "TEST-CCS", "name": "Test College of Computer Studies"})
+        cls.course_bsit = cls.Course.create(
+            {
+                "code": "TEST-BSIT",
+                "name": "Test BS Information Technology",
+                "department_id": cls.department_ccs.id,
+            }
+        )
 
         Users = cls.env["res.users"]
         cls.group_registrar = cls.env.ref("trn_student.group_student_registrar")

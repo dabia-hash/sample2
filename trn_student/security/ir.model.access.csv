@@ -5,3 +5,6 @@ access_trn_course_registrar,trn.course / Registrar,model_trn_course,group_studen
 access_trn_course_manager,trn.course / Manager,model_trn_course,group_student_manager,1,1,1,1
 access_trn_student_registrar,trn.student / Registrar,model_trn_student,group_student_registrar,1,1,1,0
 access_trn_student_manager,trn.student / Manager,model_trn_student,group_student_manager,1,1,1,1
+access_trn_department_system,trn.department / System,model_trn_department,base.group_system,1,1,1,1
+access_trn_department_registrar,trn.department / Registrar,model_trn_department,group_student_registrar,1,0,0,0
+access_trn_department_manager,trn.department / Manager,model_trn_department,group_student_manager,1,1,1,1

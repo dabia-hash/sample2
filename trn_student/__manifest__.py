@@ -1,6 +1,6 @@
 {
     "name": "trn Student",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "trn/Education",
     "summary": "Student records: ID number, name, course and year",
     "author": "Your Organization",
@@ -12,6 +12,7 @@
     "data": [
         "security/security_groups.xml",
         "security/ir.model.access.csv",
+        "views/department_views.xml",
         "views/student_views.xml",
         "views/course_views.xml",
         "views/menus.xml",
