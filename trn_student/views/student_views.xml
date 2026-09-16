@@ -22,6 +22,11 @@
                             <field name="name" placeholder="e.g. Maria Santos"/>
                         </h2>
                     </div>
+                    <group name="admission">
+                        <group>
+                            <field name="enrollment_number" placeholder="Generated on save"/>
+                        </group>
+                    </group>
                     <group>
                         <group>
                             <field name="course_id"/>
@@ -29,9 +34,24 @@
                         </group>
                         <group>
                             <field name="school_year" placeholder="e.g. 2026-2027"/>
+                            <field name="semester"/>
                             <field name="active" invisible="1"/>
                         </group>
                     </group>
+                    <separator string="Subjects &amp; Grades"/>
+                    <field name="grade_ids" nolabel="1">
+                        <list editable="bottom">
+                            <field
+                                name="offering_id"
+                                options="{'no_create': True}"
+                                domain="[('school_year', '=', parent.school_year), ('semester', '=', parent.semester)]"
+                            />
+                            <field name="faculty_id" readonly="1"/>
+                            <field name="units" readonly="1"/>
+                            <field name="grade"/>
+                            <field name="is_passing" readonly="1" optional="hide"/>
+                        </list>
+                    </field>
                     <group name="additional_student_details" invisible="1"/>
                 </sheet>
             </form>
@@ -43,11 +63,13 @@
         <field name="model">trn.student</field>
         <field name="arch" type="xml">
             <list>
+                <field name="enrollment_number"/>
                 <field name="id_number"/>
                 <field name="name"/>
                 <field name="course_id"/>
                 <field name="year_level"/>
                 <field name="school_year"/>
+                <field name="semester"/>
                 <field name="active" optional="hide"/>
             </list>
         </field>
@@ -63,8 +85,24 @@
                     string="Student"
                     filter_domain="['|', ('id_number', 'ilike', self), ('name', 'ilike', self)]"
                 />
+                <field
+                    name="enrollment_number"
+                    string="Enrollment ID"
+                    filter_domain="[('enrollment_number', 'ilike', self)]"
+                />
                 <field name="course_id"/>
                 <field name="school_year"/>
+                <field name="semester"/>
+                <filter
+                    name="filter_current_year"
+                    string="Current Academic Year"
+                    domain="[('is_current_year', '=', True)]"
+                />
+                <separator/>
+                <filter name="filter_semester_1" string="1st Semester" domain="[('semester', '=', '1')]"/>
+                <filter name="filter_semester_2" string="2nd Semester" domain="[('semester', '=', '2')]"/>
+                <filter name="filter_semester_summer" string="Summer" domain="[('semester', '=', 'S')]"/>
+                <separator/>
                 <filter name="filter_year_1" string="1st Year" domain="[('year_level', '=', '1')]"/>
                 <filter name="filter_year_2" string="2nd Year" domain="[('year_level', '=', '2')]"/>
                 <filter name="filter_year_3" string="3rd Year" domain="[('year_level', '=', '3')]"/>
@@ -83,6 +121,7 @@
                         string="Academic Year"
                         context="{'group_by': 'school_year'}"
                     />
+                    <filter name="group_by_semester" string="Semester" context="{'group_by': 'semester'}"/>
                 </group>
             </search>
         </field>

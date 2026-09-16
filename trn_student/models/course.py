@@ -28,6 +28,14 @@ class Course(models.Model):
         translate=True,
         help="Course as it appears on records, e.g. 'BS Information Technology'",
     )
+    department_id = fields.Many2one(
+        comodel_name="trn.department",
+        string="Department",
+        required=True,
+        index=True,
+        ondelete="restrict",
+        help="Department that offers this course, e.g. the College of Computer Studies",
+    )
     active = fields.Boolean(
         default=True,
         help="Archive a course that is no longer offered instead of deleting it",

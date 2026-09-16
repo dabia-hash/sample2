@@ -15,6 +15,7 @@
                     <group>
                         <group>
                             <field name="name" placeholder="e.g. BS Information Technology"/>
+                            <field name="department_id"/>
                             <field name="student_count"/>
                             <field name="active" invisible="1"/>
                         </group>
@@ -32,9 +33,34 @@
             <list>
                 <field name="code"/>
                 <field name="name"/>
+                <field name="department_id"/>
                 <field name="student_count"/>
                 <field name="active" optional="hide"/>
             </list>
+        </field>
+    </record>
+
+    <record id="view_trn_course_search" model="ir.ui.view">
+        <field name="name">trn.course.search</field>
+        <field name="model">trn.course</field>
+        <field name="arch" type="xml">
+            <search>
+                <field
+                    name="code"
+                    string="Course"
+                    filter_domain="['|', ('code', 'ilike', self), ('name', 'ilike', self)]"
+                />
+                <field name="department_id"/>
+                <separator/>
+                <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group name="group_by">
+                    <filter
+                        name="group_by_department"
+                        string="Department"
+                        context="{'group_by': 'department_id'}"
+                    />
+                </group>
+            </search>
         </field>
     </record>
 
@@ -42,6 +68,7 @@
         <field name="name">Courses</field>
         <field name="res_model">trn.course</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_trn_course_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Add a course</p>
             <p>

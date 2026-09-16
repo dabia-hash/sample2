@@ -18,11 +18,40 @@
     />
 
     <menuitem
+        id="menu_student_offering"
+        name="Subject Offerings"
+        parent="menu_student_records"
+        action="action_trn_subject_offering"
+        sequence="20"
+    />
+
+    <menuitem
         id="menu_student_configuration"
         name="Configuration"
         parent="menu_student_root"
         sequence="90"
         groups="trn_student.group_student_manager"
+    />
+    <menuitem
+        id="menu_student_department"
+        name="Departments"
+        parent="menu_student_configuration"
+        action="action_trn_department"
+        sequence="5"
+    />
+    <menuitem
+        id="menu_student_subject"
+        name="Subjects"
+        parent="menu_student_configuration"
+        action="action_trn_subject"
+        sequence="15"
+    />
+    <menuitem
+        id="menu_student_faculty"
+        name="Faculty"
+        parent="menu_student_configuration"
+        action="action_trn_faculty"
+        sequence="20"
     />
     <menuitem
         id="menu_student_course"

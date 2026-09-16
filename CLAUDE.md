@@ -89,6 +89,34 @@ Layer 0: ODOO CORE (base, hr, stock, account, calendar)
   `student_count` both labelled "Students")
 - `assertRaises(Exception)` trips ruff B017. Missing required fields raise `psycopg2.errors.NotNullViolation`;
   `ondelete="restrict"` raises `psycopg2.errors.RestrictViolation`
+- `ir.ui.menu` uses `group_ids` in Odoo 19, not `groups_id`
+- The domain optimiser rewrites a boolean leaf before it reaches a `search=` method: `('flag', '=', True)` arrives as
+  `('in', [True])`. A search method handling only `=`/`!=` raises `ValueError: Unsupported operator in` at search time,
+  not at install — handle `in`/`not in` too
+- A friendly duplicate message needs a check **before** the insert. `@api.constrains` runs after the SQL `UNIQUE`
+  constraint has already fired, so the user gets a Postgres error instead of your `ValidationError`
+- A `One2many` whose `comodel_name` does not exist yet kills the **whole registry**
+  (`assert self.comodel_name in model.pool`), not just that model, and the test run reports `Failed to load registry`
+  with no test results. Add the comodel in the same change as the field that points at it
+- `ir.ui.menu.complete_name` is computed, not stored, so it cannot appear in a search domain. Filter on `parent_id`
+
+### Migrations
+
+- `pre-migrate` runs **before** the module's models are loaded, so a table added by this version does not exist yet.
+  Backfilling a new required FK belongs in `post-migrate`; plain columns on an existing table can be filled in
+  `pre-migrate` with SQL
+- Raw SQL in a migration sees only what the ORM has **flushed**. `orphans.write({...})` followed by
+  `ALTER TABLE ... SET NOT NULL` fails on the very rows it just fixed — call `env.flush_all()` between them
+- A failed migration rolls the whole upgrade back cleanly, module version included, so a broken `post-migrate` is safe
+  to fix and re-run
+
+### Running Tests With Demo Data
+
+- `./odoo-project test <module>` does **not** load demo data, so every demo assertion silently skips. To prove they run,
+  invoke odoo-bin directly with `--with-demo` against a scratch database, then check the log for
+  `Starting TestXDemoData` rather than trusting the pass count
+- On Windows Git Bash, `docker compose run` mangles container paths into `C:/Program Files/Git/...`. Export
+  `MSYS_NO_PATHCONV=1` and `MSYS2_ARG_CONV_EXCL='*'` first
 
 ### State Machines and Approvals
 

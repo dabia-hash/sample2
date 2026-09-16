@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_trn_faculty_form" model="ir.ui.view">
+        <field name="name">trn.faculty.form</field>
+        <field name="model">trn.faculty</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="code"/>
+                        <h1>
+                            <field name="code" placeholder="e.g. REYES-J"/>
+                        </h1>
+                        <label for="name"/>
+                        <h2>
+                            <field name="name" placeholder="e.g. Prof. Juan Reyes"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="department_id"/>
+                            <field name="offering_count"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Teaching Load" name="offerings">
+                            <field name="offering_ids" readonly="1">
+                                <list>
+                                    <field name="subject_id"/>
+                                    <field name="school_year"/>
+                                    <field name="semester"/>
+                                    <field name="student_count"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_trn_faculty_list" model="ir.ui.view">
+        <field name="name">trn.faculty.list</field>
+        <field name="model">trn.faculty</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="department_id"/>
+                <field name="offering_count"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_trn_faculty" model="ir.actions.act_window">
+        <field name="name">Faculty</field>
+        <field name="res_model">trn.faculty</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add a professor</p>
+            <p>
+                Professors added here can be assigned to teach a subject in a
+                given term.
+            </p>
+        </field>
+    </record>
+</odoo>
